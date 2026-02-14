@@ -1,0 +1,96 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Founder login flow: deterministic admin bypass of unlock + corrected routing/guards",
+  "requirements": [
+    {
+      "id": "REQ-18",
+      "summary": "Make Founder (admin) Internet Identity sign-in deterministically bypass the App Password unlock flow and reach protected routes without getting stuck on /unlock.",
+      "acceptanceCriteria": [
+        "After Internet Identity sign-in as the Founder, the user is not stuck on /unlock and can reach /projects successfully.",
+        "Non-Founder users still must follow the existing App Password unlock flow before accessing protected routes.",
+        "The Founder login behavior is deterministic (no reliance on previous local/session state).",
+        "Any new or changed user-facing text for this flow is in English."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useCallerRole.ts",
+          "operation": "create",
+          "description": "Create a dedicated React Query hook that reads the signed-in caller role from the backend actor (e.g., getCallerUserRole / isCallerAdmin) and exposes stable loading/fetched flags keyed by the current principal. Use the authorization component’s RBAC approach to drive role-based UX decisions. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/auth/UnlockGate.tsx",
+          "operation": "modify",
+          "description": "Update the guard logic to allow admin/Founder users (as determined by useCallerRole) to pass through to protected routes without checking unlock status, while preserving the existing authentication + unlock enforcement for non-admin users. Ensure deterministic behavior by deriving decisions from current identity + freshly fetched role, not from session/local storage. Use the authorization component’s guidance for role-based access control. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/LoginPage.tsx",
+          "operation": "modify",
+          "description": "Adjust post-login redirect logic: when identity is present, fetch caller role and navigate admins/Founder directly to /projects, while non-admin users continue to /unlock. Ensure the redirect waits for role fetch to avoid race conditions and /unlock loops. Use the authorization component’s guidance for role-based UX. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/UnlockPage.tsx",
+          "operation": "modify",
+          "description": "If the signed-in user is admin/Founder (via useCallerRole), immediately redirect away from /unlock to the intended returnTo (or /projects) and avoid presenting unlock UI. Preserve existing unlock/create-password experience for non-admin users. Use the authorization component’s guidance for role-based UX. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-20",
+      "summary": "Update login/unlock UX and routing/guards so Founder and non-Founder flows redirect correctly and protected routes remain protected for locked non-Founders.",
+      "acceptanceCriteria": [
+        "LoginPage/UnlockPage/UnlockGate routing produces a correct end-to-end path for both Founder and non-Founder accounts.",
+        "Protected routes (e.g., /projects, /settings) remain protected for non-Founders and continue to redirect to /unlock when locked.",
+        "No console errors occur during the Founder login flow in a standard sign-in session."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Ensure protected routes (/projects, /settings) continue to be wrapped by UnlockGate, and that the guard’s updated role-aware behavior is the single source of truth for route protection. Keep public routes (/, /unlock) accessible as today while enabling correct post-login navigation. Verify no new routes are introduced beyond those required."
+        },
+        {
+          "path": "frontend/src/pages/LoginPage.tsx",
+          "operation": "modify",
+          "description": "Update user-facing copy (English only) if needed to clarify that some accounts may be taken directly to the app after sign-in, while others will be asked to unlock. Ensure copy changes do not introduce founder-only secrets or identities beyond what already exists. Use the authorization component’s guidance for handling authenticated state. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/UnlockPage.tsx",
+          "operation": "modify",
+          "description": "Refine unlock screen states to avoid confusing transitions (e.g., brief unlock form flash for Founder/admin) by gating render on role fetch completion. Keep all user-facing text in English. Use the authorization component’s guidance for graceful handling of authorization-related UX. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/lib/backendCallWithUnlock.ts",
+          "operation": "modify",
+          "description": "Harden locked-error handling to avoid navigation loops by preferring caller-provided onLocked handlers (from guarded contexts) and ensuring returnTo is set consistently. Keep behavior compatible with updated UnlockGate so admins/Founder are not incorrectly forced into /unlock when the app can recover via routing. (Do not add new auth providers.)"
+        }
+      ]
+    },
+    {
+      "id": "REQ-21",
+      "summary": "Ensure the frontend builds cleanly and the adjusted login/unlock path introduces no new runtime errors.",
+      "acceptanceCriteria": [
+        "Frontend typecheck/build completes without errors.",
+        "Backend canister compiles without errors.",
+        "No new runtime traps are introduced in the adjusted login/unlock path for Founder or non-Founder users."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useCallerRole.ts",
+          "operation": "create",
+          "description": "Implement the hook with strict TypeScript typings based on frontend/src/backend.d.ts (UserRole) and conservative error handling (treat unknown/error as non-admin) to prevent runtime crashes and ensure build stability. Use the authorization component’s RBAC guidance. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/auth/UnlockGate.tsx",
+          "operation": "modify",
+          "description": "Ensure the updated guard handles loading states without throwing (no undefined accesses) and avoids console errors by only navigating when required signals (identity/role/unlock status) are fetched."
+        },
+        {
+          "path": "frontend/src/pages/LoginPage.tsx",
+          "operation": "modify",
+          "description": "Ensure navigation side effects are stable (no repeated redirects) by keying effects on fetched role state and identity changes, preventing console warnings/errors and ensuring a predictable build/runtime behavior."
+        }
+      ]
+    }
+  ]
+}

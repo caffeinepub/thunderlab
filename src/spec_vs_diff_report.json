@@ -1,0 +1,38 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-14T23:31:38.887Z",
+  "summary": "Diff implements a role-based (admin) bypass of the unlock flow in the frontend (LoginPage, UnlockPage, UnlockGate) and adds a new hook (useCallerRole/useIsCallerAdmin) that depends on backend role endpoints. However, the provided backend diff excerpt does not show the necessary new backend methods (e.g., getCallerUserRole/isCallerAdmin) nor explicit founder/admin principal enforcement, so backend-side requirements cannot be confirmed from the diff summary.",
+  "missing_requirements": [
+    {
+      "id": "REQ-19",
+      "requirement": "Update backend authorization/role checks (as needed) to support the adjusted Founder login behavior while preserving existing security guarantees for non-Founders.",
+      "reason": "Frontend now calls role-check endpoints (actor.getCallerUserRole(), actor.isCallerAdmin()) and relies on an admin bypass, but the backend diff excerpt does not show these endpoints being implemented nor the enforcement that only designated founder/admin principals receive bypass behavior.",
+      "evidence": [
+        "frontend/src/hooks/useCallerRole.ts",
+        "backend/main.mo (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-21",
+      "requirement": "Ensure the project builds successfully and is ready for redeployment after the Founder login adjustments.",
+      "reason": "The diff introduces new frontend imports/types and backend calls (UserRole, getCallerUserRole, isCallerAdmin). The diff summary does not include corresponding backend method/type additions, so successful compilation/typecheck cannot be verified from the provided excerpt.",
+      "evidence": [
+        "frontend/src/hooks/useCallerRole.ts",
+        "backend/main.mo (truncated)"
+      ]
+    }
+  ],
+  "hallucinated_features": [],
+  "confidence": 0.56,
+  "changed_files": [
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/src/components/auth/UnlockGate.tsx",
+    "frontend/src/hooks/useCallerRole.ts",
+    "frontend/src/lib/backendCallWithUnlock.ts",
+    "frontend/src/pages/LoginPage.tsx",
+    "frontend/src/pages/UnlockPage.tsx",
+    "project_state.json"
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "kind": "build_request",
+  "title": "Adjust Founder login flow and redeploy",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-18",
+      "text": "Adjust the Founder login feature so the Founder can reliably sign in and access the app without getting stuck in the Internet Identity → Unlock flow.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Adjust the founder login feature and deploy again"
+        ]
+      },
+      "acceptanceCriteria": [
+        "After Internet Identity sign-in as the Founder, the user is not stuck on /unlock and can reach /projects successfully.",
+        "Non-Founder users still must follow the existing App Password unlock flow before accessing protected routes.",
+        "The Founder login behavior is deterministic (no reliance on previous local/session state).",
+        "Any new or changed user-facing text for this flow is in English."
+      ]
+    },
+    {
+      "id": "REQ-19",
+      "text": "Update backend authorization/role checks (as needed) to support the adjusted Founder login behavior while preserving existing security guarantees for non-Founders.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Adjust the founder login feature and deploy again"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend enforces that only the designated Founder/admin principal(s) receive the Founder-specific login behavior.",
+        "Non-Founders cannot obtain the Founder-specific access path (including via malformed client calls).",
+        "Existing endpoints that currently require an unlocked session continue to require it for non-Founders."
+      ]
+    },
+    {
+      "id": "REQ-20",
+      "text": "Update the frontend login/unlock UX to reflect the adjusted Founder login behavior and ensure routing/guards redirect correctly.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Adjust the founder login feature and deploy again"
+        ]
+      },
+      "acceptanceCriteria": [
+        "LoginPage/UnlockPage/UnlockGate routing produces a correct end-to-end path for both Founder and non-Founder accounts.",
+        "Protected routes (e.g., /projects, /settings) remain protected for non-Founders and continue to redirect to /unlock when locked.",
+        "No console errors occur during the Founder login flow in a standard sign-in session."
+      ]
+    },
+    {
+      "id": "REQ-21",
+      "text": "Ensure the project builds successfully and is ready for redeployment after the Founder login adjustments.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Adjust the founder login feature and deploy again"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Frontend typecheck/build completes without errors.",
+        "Backend canister compiles without errors.",
+        "No new runtime traps are introduced in the adjusted login/unlock path for Founder or non-Founder users."
+      ]
+    }
+  ],
+  "constraints": [
+    "Backend must remain a single-actor Motoko canister (all logic in backend/main.mo).",
+    "Do not modify files under frontend immutablePaths (frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui).",
+    "Use English for any user-facing text."
+  ],
+  "nonGoals": [
+    "Adding new authentication providers beyond Internet Identity.",
+    "Implementing real-time features or external databases/services.",
+    "Changing unrelated audio/project features (recording, effects, export, sharing) unless required to fix the Founder login flow."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

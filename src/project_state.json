@@ -1,0 +1,263 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 9,
+  "summary": "Thunderlab is a mobile-first music production platform for emerging/independent artists, enabling multi-track vocal recording, beat import, essential audio effects (autotune, EQ, compression, reverb), cloud project saving, export of finished tracks, and sharing—designed to be simple, accessible, and smartphone-first. Future plans include collaboration tools, AI mastering, and creator community features while keeping core tools free.",
+  "architectural_notes": [
+    "Mobile-first UX and performance as primary constraint (smartphone-first design).",
+    "Authentication approach decision: require user-created password (move away from one-tap Internet Identity flow) to better address user privacy expectations.",
+    "Deployment plan/priority: adjust the Founder login feature first, then retry deployment."
+  ],
+  "known_issues": [
+    "Auth requirements changed: project state currently specifies Internet Identity, but user now requests password-based login.",
+    "Deployment error encountered during network deployment; app remains in previous deployed state until redeploy succeeds."
+  ],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-create-a-mobile-first-thunderlab-web-app-shell-with-a-coherent-distinct-visual-theme-colors-typography-spacing-component-style-applied-consistently-across-all-screens",
+      "title": "Create a mobile-first Thunderlab web app shell with a coherent, distinct visual theme (colors, typography, spacing, component style) applied consistently across all screens.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-authentication-using-internet-identity-and-associate-all-saved-projects-with-the-signed-in-principal",
+      "title": "Implement authentication using Internet Identity and associate all saved projects with the signed-in principal.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-a-multi-track-project-workspace-where-users-can-create-a-new-project-record-vocal-takes-into-separate-tracks-and-view-basic-track-controls",
+      "title": "Provide a multi-track project workspace where users can: create a new project, record vocal takes into separate tracks, and view basic track controls.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-allow-users-to-import-beats-audio-files-into-a-project-as-an-additional-track",
+      "title": "Allow users to import beats/audio files into a project as an additional track.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-essential-audio-effects-controls-that-can-be-applied-per-track-as-applicable-autotune-pitch-correction-eq-compression-and-reverb",
+      "title": "Add essential audio effects controls that can be applied per track (as applicable): autotune (pitch correction), EQ, compression, and reverb.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-cloud-project-storage-save-load-projects-project-metadata-track-list-effect-settings-and-audio-data-to-from-the-internet-computer-backend-canister",
+      "title": "Implement cloud project storage: save/load projects (project metadata, track list, effect settings, and audio data) to/from the Internet Computer backend canister.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enable-export-of-a-finished-track-by-rendering-a-mixed-down-audio-file-for-the-current-project-and-letting-the-user-download-it",
+      "title": "Enable export of a finished track by rendering a mixed-down audio file for the current project and letting the user download it.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-sharing-flow-that-lets-a-user-share-a-project-or-an-exported-result-via-a-shareable-link-with-public-read-only-access-to-playback",
+      "title": "Implement a sharing flow that lets a user share a project or an exported result via a shareable link, with public read-only access to playback.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-basic-informational-ui-text-in-english-describing-thunderlab-s-purpose-and-include-founder-credit-founder-gerald-lionel-legrange-in-an-about-area-e-g-settings-about-screen-or-footer",
+      "title": "Add basic informational UI text in English describing Thunderlab’s purpose and include founder credit “Founder: Gerald Lionel LeGrange” in an About area (e.g., settings/about screen or footer).",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-in-app-onboarding-empty-state-flow-for-beginners-explaining-how-to-record-a-track-import-a-beat-apply-effects-save-export-and-share",
+      "title": "Add an in-app onboarding/empty-state flow for beginners explaining how to record a track, import a beat, apply effects, save, export, and share.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-privacy-focused-app-password-that-users-create-required-to-unlock-access-to-their-thunderlab-projects-and-related-sensitive-actions-after-they-authenticate-with-internet-identity",
+      "title": "Add a privacy-focused “App Password” that users create, required to unlock access to their Thunderlab projects and related sensitive actions after they authenticate with Internet Identity.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-frontend-authentication-onboarding-ux-to-keep-registration-easy-while-adding-the-password-gate-internet-identity-sign-in-remains-the-entry-point-followed-by-a-simple-create-password-or-unlock-step",
+      "title": "Update the frontend authentication/onboarding UX to keep registration easy while adding the password gate: Internet Identity sign-in remains the entry point, followed by a simple create-password or unlock step.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-app-password-management-screen-accessible-from-settings-including-change-password-and-reset-flow-where-reset-requires-internet-identity-authentication-no-email-sms-recovery",
+      "title": "Add an App Password management screen accessible from Settings, including change password and reset flow, where reset requires Internet Identity authentication (no email/SMS recovery).",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-optional-remember-this-device-quick-unlock-mode-that-reduces-repeated-login-friction-after-internet-identity-sign-in-by-securely-caching-the-app-password-hash-on-the-device-and-attempting-an-automatic-unlock-on-subsequent-visits",
+      "title": "Add an optional “Remember this device” quick-unlock mode that reduces repeated login friction after Internet Identity sign-in by securely caching the app-password hash on the device and attempting an automatic unlock on subsequent visits.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-a-clear-way-for-the-founder-and-any-user-to-disable-quick-unlock-on-the-current-device-and-remove-any-saved-quick-unlock-data",
+      "title": "Provide a clear way for the Founder (and any user) to disable quick unlock on the current device and remove any saved quick-unlock data.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-adjust-the-founder-login-feature-so-the-founder-can-reliably-sign-in-and-access-the-app-without-getting-stuck-in-the-internet-identity-unlock-flow",
+      "title": "Adjust the Founder login feature so the Founder can reliably sign in and access the app without getting stuck in the Internet Identity → Unlock flow.",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-frontend-login-unlock-ux-to-reflect-the-adjusted-founder-login-behavior-and-ensure-routing-guards-redirect-correctly",
+      "title": "Update the frontend login/unlock UX to reflect the adjusted Founder login behavior and ensure routing/guards redirect correctly.",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-project-builds-successfully-and-is-ready-for-redeployment-after-the-founder-login-adjustments",
+      "title": "Ensure the project builds successfully and is ready for redeployment after the Founder login adjustments.",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Mobile-first multi-track recording for vocals (basic multitrack workflow)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Import beats/audio into projects",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Essential audio effects: autotune, EQ, compression, reverb",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Cloud project storage (save/load projects)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Export finished tracks",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Share music with others (sharing flow/links)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Collaboration tools (future)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "AI mastering (future)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Creator community features (future)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Keep core music creation tools free (product requirement)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-21",
+      "summary": "Create a backend data model and API for projects and shared access that supports: create/update/list/get/delete project, and create/get share links.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-22",
+      "summary": "Implement password-based registration/login (user-created password) with privacy-focused UX",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-24",
+      "summary": "Implement backend session/unlock handling so that password verification grants a time-limited “unlocked” state, and sensitive backend operations require the user to be unlocked.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-25",
+      "summary": "Add an easy login path for the Founder account (founder/admin convenience access)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-27",
+      "summary": "Update backend authorization/role checks (as needed) to support the adjusted Founder login behavior while preserving existing security guarantees for non-Founders.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Thunderlab",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

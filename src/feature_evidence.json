@@ -1,0 +1,69 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-adjust-the-founder-login-feature-so-the-founder-can-reliably-sign-in-and-access-the-app-without-getting-stuck-in-the-internet-identity-unlock-flow",
+      "featureTitle": "Adjust the Founder login feature so the Founder can reliably sign in and access the app without getting stuck in the Internet Identity → Unlock flow.",
+      "files": [
+        "frontend/src/components/auth/UnlockGate.tsx",
+        "frontend/src/hooks/useCallerRole.ts",
+        "frontend/src/pages/LoginPage.tsx",
+        "frontend/src/pages/UnlockPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-18"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-frontend-login-unlock-ux-to-reflect-the-adjusted-founder-login-behavior-and-ensure-routing-guards-redirect-correctly",
+      "featureTitle": "Update the frontend login/unlock UX to reflect the adjusted Founder login behavior and ensure routing/guards redirect correctly.",
+      "files": [
+        "frontend/src/lib/backendCallWithUnlock.ts",
+        "frontend/src/pages/LoginPage.tsx",
+        "frontend/src/pages/UnlockPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-20"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-ensure-the-project-builds-successfully-and-is-ready-for-redeployment-after-the-founder-login-adjustments",
+      "featureTitle": "Ensure the project builds successfully and is ready for redeployment after the Founder login adjustments.",
+      "files": [
+        "frontend/src/components/auth/UnlockGate.tsx",
+        "frontend/src/hooks/useCallerRole.ts",
+        "frontend/src/pages/LoginPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-21"
+      ],
+      "confidence": "high"
+    }
+  ]
+}
