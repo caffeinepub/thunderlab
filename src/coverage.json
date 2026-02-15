@@ -1,84 +1,78 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-14T23:31:38.890Z",
+  "generatedAt": "2026-02-15T00:16:41.199Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
+    "total": 3,
     "implemented": 3,
     "items": [
       {
-        "id": "REQ-18",
-        "summary": "Adjust the Founder login feature so the Founder can reliably sign in and access the app without getting stuck in the Internet Identity → Unlock flow.",
+        "id": "REQ-26",
+        "summary": "Add a protected \"Beat Maker\" experience inside Thunderlab that lets an authenticated + unlocked user create a simple drum beat using a step sequencer UI (e.g., Kick/Snare/Hi-Hat rows on a 16-step grid) with transport controls (Play/Stop) and a tempo (BPM) control.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useCallerRole.ts",
-          "frontend/src/components/auth/UnlockGate.tsx",
-          "frontend/src/pages/LoginPage.tsx",
-          "frontend/src/pages/UnlockPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useCallerRole.ts",
-          "frontend/src/components/auth/UnlockGate.tsx",
-          "frontend/src/pages/LoginPage.tsx",
-          "frontend/src/pages/UnlockPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-19",
-        "summary": "Update backend authorization/role checks (as needed) to support the adjusted Founder login behavior while preserving existing security guarantees for non-Founders.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-20",
-        "summary": "Update the frontend login/unlock UX to reflect the adjusted Founder login behavior and ensure routing/guards redirect correctly.",
-        "status": "implemented",
-        "plannedFiles": [
+          "frontend/src/pages/BeatMakerPage.tsx",
+          "frontend/src/features/beat-maker/useStepSequencer.ts",
+          "frontend/src/features/beat-maker/audioEngine.ts",
           "frontend/src/App.tsx",
-          "frontend/src/pages/LoginPage.tsx",
-          "frontend/src/pages/UnlockPage.tsx",
-          "frontend/src/lib/backendCallWithUnlock.ts"
+          "frontend/src/components/layout/AppNav.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/LoginPage.tsx",
-          "frontend/src/pages/UnlockPage.tsx",
-          "frontend/src/lib/backendCallWithUnlock.ts"
+          "frontend/src/pages/BeatMakerPage.tsx",
+          "frontend/src/features/beat-maker/useStepSequencer.ts",
+          "frontend/src/features/beat-maker/audioEngine.ts",
+          "frontend/src/App.tsx",
+          "frontend/src/components/layout/AppNav.tsx"
         ]
       },
       {
-        "id": "REQ-21",
-        "summary": "Ensure the project builds successfully and is ready for redeployment after the Founder login adjustments.",
+        "id": "REQ-27",
+        "summary": "Provide an in-app audio rendering/export action in Beat Maker that generates an audio file from the current pattern (WAV or similar browser-supported downloadable format) with a clear filename and download button.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useCallerRole.ts",
-          "frontend/src/components/auth/UnlockGate.tsx",
-          "frontend/src/pages/LoginPage.tsx"
+          "frontend/src/features/beat-maker/renderToWav.ts",
+          "frontend/src/features/beat-maker/wavEncoder.ts",
+          "frontend/src/pages/BeatMakerPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useCallerRole.ts",
-          "frontend/src/components/auth/UnlockGate.tsx",
-          "frontend/src/pages/LoginPage.tsx"
+          "frontend/src/features/beat-maker/renderToWav.ts",
+          "frontend/src/features/beat-maker/wavEncoder.ts",
+          "frontend/src/pages/BeatMakerPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-28",
+        "summary": "Integrate Beat Maker output with the existing \"import beats/audio\" workflow by allowing the user to take the generated beat audio and add it into a project as an audio track without requiring external tools (e.g., offer an \"Add to project\" action that reuses the same code path as importing an audio file).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/lib/projectAudioImport.ts",
+          "frontend/src/pages/BeatMakerPage.tsx",
+          "frontend/src/pages/ProjectsPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/lib/projectAudioImport.ts",
+          "frontend/src/pages/BeatMakerPage.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/main.mo",
     "build-request.json",
-    "build-template/README.md",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/auth/UnlockGate.tsx",
-    "frontend/src/hooks/useCallerRole.ts",
-    "frontend/src/lib/backendCallWithUnlock.ts",
-    "frontend/src/pages/LoginPage.tsx",
-    "frontend/src/pages/UnlockPage.tsx",
+    "frontend/src/App.tsx",
+    "frontend/src/components/layout/AppNav.tsx",
+    "frontend/src/features/beat-maker/audioEngine.ts",
+    "frontend/src/features/beat-maker/renderToWav.ts",
+    "frontend/src/features/beat-maker/useStepSequencer.ts",
+    "frontend/src/features/beat-maker/wavEncoder.ts",
+    "frontend/src/lib/projectAudioImport.ts",
+    "frontend/src/pages/BeatMakerPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

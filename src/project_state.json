@@ -1,11 +1,13 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 9,
+  "projectStateVersion": 13,
   "summary": "Thunderlab is a mobile-first music production platform for emerging/independent artists, enabling multi-track vocal recording, beat import, essential audio effects (autotune, EQ, compression, reverb), cloud project saving, export of finished tracks, and sharing—designed to be simple, accessible, and smartphone-first. Future plans include collaboration tools, AI mastering, and creator community features while keeping core tools free.",
   "architectural_notes": [
     "Mobile-first UX and performance as primary constraint (smartphone-first design).",
     "Authentication approach decision: require user-created password (move away from one-tap Internet Identity flow) to better address user privacy expectations.",
-    "Deployment plan/priority: adjust the Founder login feature first, then retry deployment."
+    "Deployment plan/priority: adjust the Founder login feature first, then retry deployment.",
+    "Plan to ship to Apple App Store and Google Play by wrapping the existing mobile-first web app in native shells (e.g., Capacitor) to produce iOS/Android builds for store submission.",
+    "Scope expansion: add an internal beat-creation module (e.g., step sequencer/drum machine) rather than only importing external beats."
   ],
   "known_issues": [
     "Auth requirements changed: project state currently specifies Internet Identity, but user now requests password-based login.",
@@ -156,6 +158,62 @@
         "REQ-21"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-add-a-production-ready-pwa-app-shell-metadata-setup-for-thunderlab-so-it-can-be-installed-and-also-used-as-the-basis-for-native-wrapping-add-a-web-app-manifest-favicon-apple-touch-icons-and-required-meta-tags-app-name-theme-color-viewport-to-the-existing-frontend-entry-html",
+      "title": "Add a production-ready PWA/app-shell metadata setup for Thunderlab so it can be installed and also used as the basis for native wrapping: add a web app manifest, favicon/apple-touch icons, and required meta tags (app name, theme color, viewport) to the existing frontend entry HTML.",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-and-commit-a-capacitor-based-mobile-wrapper-scaffold-configuration-minimal-native-shell-setup-that-loads-the-existing-thunderlab-web-build-fullscreen-on-ios-and-android",
+      "title": "Create and commit a Capacitor-based mobile wrapper scaffold (configuration + minimal native shell setup) that loads the existing Thunderlab web build fullscreen on iOS and Android.",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-repo-document-that-a-non-technical-founder-can-follow-to-produce-store-submission-builds-include-prerequisites-apple-developer-google-play-console-accounts-bundle-identifiers-signing-steps-build-commands-and-where-to-upload-artifacts-in-app-store-connect-and-google-play-console",
+      "title": "Add a repo document that a non-technical founder can follow to produce store-submission builds: include prerequisites (Apple Developer + Google Play Console accounts), bundle identifiers, signing steps, build commands, and where to upload artifacts in App Store Connect and Google Play Console.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-basic-deep-link-url-handling-guidance-and-configuration-for-the-wrapped-app-so-that-thunderlab-share-links-can-be-opened-reliably-from-mobile-browsers-into-the-installed-app-at-minimum-document-the-needed-app-universal-link-configuration-and-ensure-the-web-app-routes-work-correctly-when-loaded-at-non-root-paths",
+      "title": "Add basic deep-link/URL handling guidance and configuration for the wrapped app so that Thunderlab share links can be opened reliably from mobile browsers into the installed app (at minimum: document the needed app/universal link configuration and ensure the web app routes work correctly when loaded at non-root paths).",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-protected-beat-maker-experience-inside-thunderlab-that-lets-an-authenticated-unlocked-user-create-a-simple-drum-beat-using-a-step-sequencer-ui-e-g-kick-snare-hi-hat-rows-on-a-16-step-grid-with-transport-controls-play-stop-and-a-tempo-bpm-control",
+      "title": "Add a protected \"Beat Maker\" experience inside Thunderlab that lets an authenticated + unlocked user create a simple drum beat using a step sequencer UI (e.g., Kick/Snare/Hi-Hat rows on a 16-step grid) with transport controls (Play/Stop) and a tempo (BPM) control.",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-an-in-app-audio-rendering-export-action-in-beat-maker-that-generates-an-audio-file-from-the-current-pattern-wav-or-similar-browser-supported-downloadable-format-with-a-clear-filename-and-download-button",
+      "title": "Provide an in-app audio rendering/export action in Beat Maker that generates an audio file from the current pattern (WAV or similar browser-supported downloadable format) with a clear filename and download button.",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-integrate-beat-maker-output-with-the-existing-import-beats-audio-workflow-by-allowing-the-user-to-take-the-generated-beat-audio-and-add-it-into-a-project-as-an-audio-track-without-requiring-external-tools-e-g-offer-an-add-to-project-action-that-reuses-the-same-code-path-as-importing-an-audio-file",
+      "title": "Integrate Beat Maker output with the existing \"import beats/audio\" workflow by allowing the user to take the generated beat audio and add it into a project as an audio track without requiring external tools (e.g., offer an \"Add to project\" action that reuses the same code path as importing an audio file).",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -253,6 +311,18 @@
       "reqIds": [
         "REQ-19"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-28",
+      "summary": "Package/wrap Thunderlab web app into iOS and Android native shells (e.g., Capacitor) and prepare App Store / Play Store submission builds",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-29",
+      "summary": "Add in-app beat creation tools (built-in beat maker/sequencer so users can create beats inside Thunderlab)",
+      "reqIds": [],
       "status": "pending"
     }
   ],

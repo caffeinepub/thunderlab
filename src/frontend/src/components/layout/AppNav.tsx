@@ -1,7 +1,7 @@
 import { useNavigate, useRouterState } from '@tanstack/react-router';
 import { useInternetIdentity } from '../../hooks/useInternetIdentity';
 import { Button } from '@/components/ui/button';
-import { Music, Settings, FolderOpen } from 'lucide-react';
+import { Music, Settings, FolderOpen, Drum } from 'lucide-react';
 
 export default function AppNav() {
   const { identity } = useInternetIdentity();
@@ -40,6 +40,14 @@ export default function AppNav() {
             >
               <FolderOpen className="w-4 h-4 mr-2" />
               Projects
+            </Button>
+            <Button
+              variant={currentPath === '/beat-maker' ? 'secondary' : 'ghost'}
+              size="sm"
+              onClick={() => navigate({ to: '/beat-maker' })}
+            >
+              <Drum className="w-4 h-4 mr-2" />
+              Beat Maker
             </Button>
             <Button
               variant={currentPath === '/settings' ? 'secondary' : 'ghost'}

@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage';
 import UnlockPage from './pages/UnlockPage';
 import ProjectsPage from './pages/ProjectsPage';
 import SettingsPage from './pages/SettingsPage';
+import BeatMakerPage from './pages/BeatMakerPage';
 import AppLayout from './components/layout/AppLayout';
 import UnlockGate from './components/auth/UnlockGate';
 
@@ -43,6 +44,16 @@ const projectsRoute = createRoute({
   ),
 });
 
+const beatMakerRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/beat-maker',
+  component: () => (
+    <UnlockGate>
+      <BeatMakerPage />
+    </UnlockGate>
+  ),
+});
+
 const settingsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/settings',
@@ -53,7 +64,7 @@ const settingsRoute = createRoute({
   ),
 });
 
-const routeTree = rootRoute.addChildren([loginRoute, unlockRoute, projectsRoute, settingsRoute]);
+const routeTree = rootRoute.addChildren([loginRoute, unlockRoute, projectsRoute, beatMakerRoute, settingsRoute]);
 
 const router = createRouter({ routeTree });
 

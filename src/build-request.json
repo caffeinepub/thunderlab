@@ -1,91 +1,74 @@
 {
   "kind": "build_request",
-  "title": "Adjust Founder login flow and redeploy",
+  "title": "Add an in-app beat maker so users can create beats inside Thunderlab",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-18",
-      "text": "Adjust the Founder login feature so the Founder can reliably sign in and access the app without getting stuck in the Internet Identity → Unlock flow.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "Adjust the founder login feature and deploy again"
-        ]
-      },
-      "acceptanceCriteria": [
-        "After Internet Identity sign-in as the Founder, the user is not stuck on /unlock and can reach /projects successfully.",
-        "Non-Founder users still must follow the existing App Password unlock flow before accessing protected routes.",
-        "The Founder login behavior is deterministic (no reliance on previous local/session state).",
-        "Any new or changed user-facing text for this flow is in English."
-      ]
-    },
-    {
-      "id": "REQ-19",
-      "text": "Update backend authorization/role checks (as needed) to support the adjusted Founder login behavior while preserving existing security guarantees for non-Founders.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "Adjust the founder login feature and deploy again"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Backend enforces that only the designated Founder/admin principal(s) receive the Founder-specific login behavior.",
-        "Non-Founders cannot obtain the Founder-specific access path (including via malformed client calls).",
-        "Existing endpoints that currently require an unlocked session continue to require it for non-Founders."
-      ]
-    },
-    {
-      "id": "REQ-20",
-      "text": "Update the frontend login/unlock UX to reflect the adjusted Founder login behavior and ensure routing/guards redirect correctly.",
+      "id": "REQ-26",
+      "text": "Add a protected \"Beat Maker\" experience inside Thunderlab that lets an authenticated + unlocked user create a simple drum beat using a step sequencer UI (e.g., Kick/Snare/Hi-Hat rows on a 16-step grid) with transport controls (Play/Stop) and a tempo (BPM) control.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "Adjust the founder login feature and deploy again"
+          "Can you make it so they can create beats through the app"
         ]
       },
       "acceptanceCriteria": [
-        "LoginPage/UnlockPage/UnlockGate routing produces a correct end-to-end path for both Founder and non-Founder accounts.",
-        "Protected routes (e.g., /projects, /settings) remain protected for non-Founders and continue to redirect to /unlock when locked.",
-        "No console errors occur during the Founder login flow in a standard sign-in session."
+        "A new Beat Maker entry point is available to signed-in users (and is not shown on the unauthenticated login screen).",
+        "Beat Maker includes a step grid where users can toggle steps on/off for at least 3 drum sounds (kick, snare, hi-hat).",
+        "Beat Maker includes Play and Stop controls and a BPM control; playback timing changes with BPM.",
+        "Beat Maker route/page is guarded by the existing UnlockGate behavior (locked users are redirected to /unlock)."
       ]
     },
     {
-      "id": "REQ-21",
-      "text": "Ensure the project builds successfully and is ready for redeployment after the Founder login adjustments.",
-      "target": "both",
+      "id": "REQ-27",
+      "text": "Provide an in-app audio rendering/export action in Beat Maker that generates an audio file from the current pattern (WAV or similar browser-supported downloadable format) with a clear filename and download button.",
+      "target": "frontend",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "Adjust the founder login feature and deploy again"
+          "Can you make it so they can create beats through the app"
         ]
       },
       "acceptanceCriteria": [
-        "Frontend typecheck/build completes without errors.",
-        "Backend canister compiles without errors.",
-        "No new runtime traps are introduced in the adjusted login/unlock path for Founder or non-Founder users."
+        "User can click an Export/Download button and receive a downloaded audio file that matches the current pattern and BPM.",
+        "Exported audio is at least several bars long (enough to loop) and is not silent when steps are enabled.",
+        "User-facing export UI text is in English and clearly indicates what will be downloaded."
+      ]
+    },
+    {
+      "id": "REQ-28",
+      "text": "Integrate Beat Maker output with the existing \"import beats/audio\" workflow by allowing the user to take the generated beat audio and add it into a project as an audio track without requiring external tools (e.g., offer an \"Add to project\" action that reuses the same code path as importing an audio file).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "Can you make it so they can create beats through the app"
+        ]
+      },
+      "acceptanceCriteria": [
+        "From Beat Maker, the user can initiate an \"Add to project\" action that results in the generated beat being treated equivalently to an imported audio file for project usage (same track type/handling as imported beats).",
+        "If the user is not currently in a project context, the UI provides a clear next step in English (e.g., navigate to Projects to pick/create a project) without crashing.",
+        "The app remains usable on mobile screens (touch-friendly step toggles and controls)."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single-actor Motoko canister (all logic in backend/main.mo).",
-    "Do not modify files under frontend immutablePaths (frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui).",
-    "Use English for any user-facing text."
+    "Backend must remain a single Motoko actor (all logic in backend/main.mo); add backend changes only if strictly required.",
+    "Do not edit files under frontend/src/components/ui or any frontend immutablePaths listed in SYSTEM_CONTEXT; compose existing UI components instead.",
+    "All user-facing text introduced for Beat Maker must be in English.",
+    "Beat Maker must respect existing authentication + unlock gating (use the current UnlockGate pattern for protected routes/pages)."
   ],
   "nonGoals": [
-    "Adding new authentication providers beyond Internet Identity.",
-    "Implementing real-time features or external databases/services.",
-    "Changing unrelated audio/project features (recording, effects, export, sharing) unless required to fix the Founder login flow."
+    "Full DAW-grade MIDI editor, piano roll, or melody/harmony composition tools.",
+    "AI-assisted beat generation or third-party sample pack integrations.",
+    "Real-time collaboration or shared beat sessions."
   ],
   "imageRequirements": {
     "required": [],

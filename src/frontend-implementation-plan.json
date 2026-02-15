@@ -1,94 +1,94 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Founder login flow: deterministic admin bypass of unlock + corrected routing/guards",
+  "title": "In-app Beat Maker (step sequencer, export, and add-to-project)",
   "requirements": [
     {
-      "id": "REQ-18",
-      "summary": "Make Founder (admin) Internet Identity sign-in deterministically bypass the App Password unlock flow and reach protected routes without getting stuck on /unlock.",
+      "id": "REQ-26",
+      "summary": "Add a protected Beat Maker page with a 16-step drum sequencer (kick/snare/hi-hat), transport controls, and BPM control, guarded by existing authentication + UnlockGate.",
       "acceptanceCriteria": [
-        "After Internet Identity sign-in as the Founder, the user is not stuck on /unlock and can reach /projects successfully.",
-        "Non-Founder users still must follow the existing App Password unlock flow before accessing protected routes.",
-        "The Founder login behavior is deterministic (no reliance on previous local/session state).",
-        "Any new or changed user-facing text for this flow is in English."
+        "A new Beat Maker entry point is available to signed-in users (and is not shown on the unauthenticated login screen).",
+        "Beat Maker includes a step grid where users can toggle steps on/off for at least 3 drum sounds (kick, snare, hi-hat).",
+        "Beat Maker includes Play and Stop controls and a BPM control; playback timing changes with BPM.",
+        "Beat Maker route/page is guarded by the existing UnlockGate behavior (locked users are redirected to /unlock)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useCallerRole.ts",
+          "path": "frontend/src/pages/BeatMakerPage.tsx",
           "operation": "create",
-          "description": "Create a dedicated React Query hook that reads the signed-in caller role from the backend actor (e.g., getCallerUserRole / isCallerAdmin) and exposes stable loading/fetched flags keyed by the current principal. Use the authorization component’s RBAC approach to drive role-based UX decisions. Verify the component's usage instructions before implementing."
+          "description": "Create the Beat Maker page UI and state management: 16-step grid with toggleable cells for Kick/Snare/Hi-Hat, Play/Stop transport, and BPM control. Use shadcn-ui primitives (e.g., Button, Card, Input/Slider equivalents already present in the project) to keep styling consistent. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/components/auth/UnlockGate.tsx",
-          "operation": "modify",
-          "description": "Update the guard logic to allow admin/Founder users (as determined by useCallerRole) to pass through to protected routes without checking unlock status, while preserving the existing authentication + unlock enforcement for non-admin users. Ensure deterministic behavior by deriving decisions from current identity + freshly fetched role, not from session/local storage. Use the authorization component’s guidance for role-based access control. Verify the component's usage instructions before implementing."
+          "path": "frontend/src/features/beat-maker/useStepSequencer.ts",
+          "operation": "create",
+          "description": "Implement a React hook to manage sequencer state (pattern grid, BPM, playing status, current step) and provide actions (toggle step, play, stop, set BPM) with mobile-friendly defaults. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/pages/LoginPage.tsx",
-          "operation": "modify",
-          "description": "Adjust post-login redirect logic: when identity is present, fetch caller role and navigate admins/Founder directly to /projects, while non-admin users continue to /unlock. Ensure the redirect waits for role fetch to avoid race conditions and /unlock loops. Use the authorization component’s guidance for role-based UX. Verify the component's usage instructions before implementing."
+          "path": "frontend/src/features/beat-maker/audioEngine.ts",
+          "operation": "create",
+          "description": "Implement a lightweight Web Audio engine for real-time playback scheduling (Kick/Snare/Hi-Hat synthesis) driven by the current pattern and BPM, with stable timing and clean stop behavior."
         },
-        {
-          "path": "frontend/src/pages/UnlockPage.tsx",
-          "operation": "modify",
-          "description": "If the signed-in user is admin/Founder (via useCallerRole), immediately redirect away from /unlock to the intended returnTo (or /projects) and avoid presenting unlock UI. Preserve existing unlock/create-password experience for non-admin users. Use the authorization component’s guidance for role-based UX. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-20",
-      "summary": "Update login/unlock UX and routing/guards so Founder and non-Founder flows redirect correctly and protected routes remain protected for locked non-Founders.",
-      "acceptanceCriteria": [
-        "LoginPage/UnlockPage/UnlockGate routing produces a correct end-to-end path for both Founder and non-Founder accounts.",
-        "Protected routes (e.g., /projects, /settings) remain protected for non-Founders and continue to redirect to /unlock when locked.",
-        "No console errors occur during the Founder login flow in a standard sign-in session."
-      ],
-      "file_operations": [
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Ensure protected routes (/projects, /settings) continue to be wrapped by UnlockGate, and that the guard’s updated role-aware behavior is the single source of truth for route protection. Keep public routes (/, /unlock) accessible as today while enabling correct post-login navigation. Verify no new routes are introduced beyond those required."
+          "description": "Register a new protected route at /beat-maker wrapped in the existing UnlockGate to enforce authentication + unlock gating (redirect locked users to /unlock). This leverages the existing authorization/authentication setup in the app. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/pages/LoginPage.tsx",
+          "path": "frontend/src/components/layout/AppNav.tsx",
           "operation": "modify",
-          "description": "Update user-facing copy (English only) if needed to clarify that some accounts may be taken directly to the app after sign-in, while others will be asked to unlock. Ensure copy changes do not introduce founder-only secrets or identities beyond what already exists. Use the authorization component’s guidance for handling authenticated state. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/UnlockPage.tsx",
-          "operation": "modify",
-          "description": "Refine unlock screen states to avoid confusing transitions (e.g., brief unlock form flash for Founder/admin) by gating render on role fetch completion. Keep all user-facing text in English. Use the authorization component’s guidance for graceful handling of authorization-related UX. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/lib/backendCallWithUnlock.ts",
-          "operation": "modify",
-          "description": "Harden locked-error handling to avoid navigation loops by preferring caller-provided onLocked handlers (from guarded contexts) and ensuring returnTo is set consistently. Keep behavior compatible with updated UnlockGate so admins/Founder are not incorrectly forced into /unlock when the app can recover via routing. (Do not add new auth providers.)"
+          "description": "Add a Beat Maker navigation entry visible only when authenticated (consistent with current nav behavior). Use existing shadcn-ui Button styling and lucide icon set where appropriate. Verify the component's usage instructions before implementing."
         }
       ]
     },
     {
-      "id": "REQ-21",
-      "summary": "Ensure the frontend builds cleanly and the adjusted login/unlock path introduces no new runtime errors.",
+      "id": "REQ-27",
+      "summary": "Add an export action in Beat Maker that renders the current pattern to a downloadable audio file (WAV) with a clear filename and English UI copy.",
       "acceptanceCriteria": [
-        "Frontend typecheck/build completes without errors.",
-        "Backend canister compiles without errors.",
-        "No new runtime traps are introduced in the adjusted login/unlock path for Founder or non-Founder users."
+        "User can click an Export/Download button and receive a downloaded audio file that matches the current pattern and BPM.",
+        "Exported audio is at least several bars long (enough to loop) and is not silent when steps are enabled.",
+        "User-facing export UI text is in English and clearly indicates what will be downloaded."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useCallerRole.ts",
+          "path": "frontend/src/features/beat-maker/renderToWav.ts",
           "operation": "create",
-          "description": "Implement the hook with strict TypeScript typings based on frontend/src/backend.d.ts (UserRole) and conservative error handling (treat unknown/error as non-admin) to prevent runtime crashes and ensure build stability. Use the authorization component’s RBAC guidance. Verify the component's usage instructions before implementing."
+          "description": "Implement offline rendering using OfflineAudioContext to generate several bars of audio from the current pattern/BPM, then encode to WAV (or similar browser-supported downloadable format) returning a Blob plus a suggested filename."
         },
         {
-          "path": "frontend/src/components/auth/UnlockGate.tsx",
-          "operation": "modify",
-          "description": "Ensure the updated guard handles loading states without throwing (no undefined accesses) and avoids console errors by only navigating when required signals (identity/role/unlock status) are fetched."
+          "path": "frontend/src/features/beat-maker/wavEncoder.ts",
+          "operation": "create",
+          "description": "Add a small utility to encode PCM buffers to a WAV Blob with correct headers, sample rate, and channel count."
         },
         {
-          "path": "frontend/src/pages/LoginPage.tsx",
+          "path": "frontend/src/pages/BeatMakerPage.tsx",
           "operation": "modify",
-          "description": "Ensure navigation side effects are stable (no repeated redirects) by keying effects on fetched role state and identity changes, preventing console warnings/errors and ensuring a predictable build/runtime behavior."
+          "description": "Add Export/Download UI in English (e.g., \"Export WAV\" / \"Download\"), wire it to offline rendering, and trigger a browser download with a clear filename (including BPM and a timestamp). Use shadcn-ui Button and toast feedback via existing Toaster setup. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-28",
+      "summary": "Allow users to add the generated beat audio into a project as an audio track by reusing the same import-audio code path; provide clear guidance when no project context is available and ensure mobile usability.",
+      "acceptanceCriteria": [
+        "From Beat Maker, the user can initiate an \"Add to project\" action that results in the generated beat being treated equivalently to an imported audio file for project usage (same track type/handling as imported beats).",
+        "If the user is not currently in a project context, the UI provides a clear next step in English (e.g., navigate to Projects to pick/create a project) without crashing.",
+        "The app remains usable on mobile screens (touch-friendly step toggles and controls)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/lib/projectAudioImport.ts",
+          "operation": "create",
+          "description": "Create a shared helper that takes a File/Blob (plus metadata like suggested name) and routes it through the app’s audio-import handling in one place (the same function will be used by both file-based imports and Beat Maker). If the repository already has an import workflow elsewhere, refactor this helper to delegate to it to ensure truly shared behavior."
+        },
+        {
+          "path": "frontend/src/pages/BeatMakerPage.tsx",
+          "operation": "modify",
+          "description": "Add an \"Add to project\" action that uses the shared import helper with the rendered audio Blob. If no active project context is available, show clear English guidance and a safe navigation action to /projects (no crash). Ensure controls/grid remain touch-friendly (adequate hit targets) for mobile. Use shadcn-ui buttons/dialog primitives as needed. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/ProjectsPage.tsx",
+          "operation": "modify",
+          "description": "Introduce (or stub, if project selection is not yet implemented) a minimal, English \"Import Audio\" action that uses the same shared projectAudioImport helper so Beat Maker and file import share the same code path. Keep changes read-oriented and avoid adding admin/CRUD behaviors not requested. Verify the component's usage instructions before implementing."
         }
       ]
     }
