@@ -90,6 +90,11 @@ export class ExternalBlob {
     }
 }
 export type PasswordHash = string;
+export interface Project {
+    id: bigint;
+    owner: Principal;
+    name: string;
+}
 export interface UserProfile {
     name: string;
 }
@@ -101,11 +106,13 @@ export enum UserRole {
 export interface backendInterface {
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    createProject(name: string): Promise<Project>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getIsUnlocked(): Promise<boolean>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
+    listProjects(): Promise<Array<Project>>;
     logout(): Promise<void>;
     saveAppPassword(passwordHash: PasswordHash): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
@@ -139,6 +146,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n1(this._uploadFile, this._downloadFile, arg1));
+            return result;
+        }
+    }
+    async createProject(arg0: string): Promise<Project> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.createProject(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.createProject(arg0);
             return result;
         }
     }
@@ -209,6 +230,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.isCallerAdmin();
+            return result;
+        }
+    }
+    async listProjects(): Promise<Array<Project>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.listProjects();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.listProjects();
             return result;
         }
     }

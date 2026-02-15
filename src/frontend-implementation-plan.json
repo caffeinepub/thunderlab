@@ -1,94 +1,52 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "In-app Beat Maker (step sequencer, export, and add-to-project)",
+  "title": "Wire Projects CTAs to a functional create-project flow",
   "requirements": [
     {
-      "id": "REQ-26",
-      "summary": "Add a protected Beat Maker page with a 16-step drum sequencer (kick/snare/hi-hat), transport controls, and BPM control, guarded by existing authentication + UnlockGate.",
+      "id": "REQ-32",
+      "summary": "Make Projects page CTAs trigger a real create-project action with visible feedback and proper auth/lock handling.",
       "acceptanceCriteria": [
-        "A new Beat Maker entry point is available to signed-in users (and is not shown on the unauthenticated login screen).",
-        "Beat Maker includes a step grid where users can toggle steps on/off for at least 3 drum sounds (kick, snare, hi-hat).",
-        "Beat Maker includes Play and Stop controls and a BPM control; playback timing changes with BPM.",
-        "Beat Maker route/page is guarded by the existing UnlockGate behavior (locked users are redirected to /unlock)."
+        "On /projects, clicking either call-to-action (\"New Project\" or \"Create Your First Project\") triggers an immediate visible UI response (e.g., opens a create dialog or navigates to a create-project screen) rather than doing nothing.",
+        "If the user is not authenticated or becomes locked, the existing guard behavior applies (redirect to / or /unlock as appropriate) and the user is not left on an unresponsive screen.",
+        "If project creation fails for any reason, the UI shows a clear English error message and provides a retry path."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/BeatMakerPage.tsx",
-          "operation": "create",
-          "description": "Create the Beat Maker page UI and state management: 16-step grid with toggleable cells for Kick/Snare/Hi-Hat, Play/Stop transport, and BPM control. Use shadcn-ui primitives (e.g., Button, Card, Input/Slider equivalents already present in the project) to keep styling consistent. Verify the component's usage instructions before implementing."
+          "path": "frontend/src/pages/ProjectsPage.tsx",
+          "operation": "modify",
+          "description": "Wire both \"New Project\" and \"Create Your First Project\" buttons to open a modal create-project UI (immediate visible response). Use shadcn-ui Dialog/Input/Button components (read-only imports from frontend/src/components/ui/*; do not modify them). Hook into the authorization component’s auth/lock model by calling backend functions through a wrapper that redirects on locked errors (Verify the component's usage instructions before implementing). Add clear error messaging on failure plus a retry action."
         },
         {
-          "path": "frontend/src/features/beat-maker/useStepSequencer.ts",
+          "path": "frontend/src/hooks/useProjects.ts",
           "operation": "create",
-          "description": "Implement a React hook to manage sequencer state (pattern grid, BPM, playing status, current step) and provide actions (toggle step, play, stop, set BPM) with mobile-friendly defaults. Verify the component's usage instructions before implementing."
-        },
+          "description": "Add React Query hooks for listing projects and creating a project via the existing actor (listProjects/createProject). Wrap calls with backendCallWithUnlock so locked users are redirected to /unlock and don’t remain on an unresponsive screen. Surface errors in a user-friendly way to the caller so the UI can show clear English errors and offer retry. (Verify the component's usage instructions before implementing)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-33",
+      "summary": "Implement a minimal create-project UX (name + create/cancel) with loading state and navigation to the created project screen.",
+      "acceptanceCriteria": [
+        "The create-project UX collects at least a project name (or uses a sensible default like \"Untitled Project\" if name entry is optional) and provides a Create/Cancel path.",
+        "While the project is being created, the UI shows a loading/disabled state so the user cannot repeatedly click and think nothing is happening.",
+        "After success, the app navigates the user to the created project's screen/workspace and the new project is visible in the projects list when returning to /projects."
+      ],
+      "file_operations": [
         {
-          "path": "frontend/src/features/beat-maker/audioEngine.ts",
+          "path": "frontend/src/pages/ProjectWorkspacePage.tsx",
           "operation": "create",
-          "description": "Implement a lightweight Web Audio engine for real-time playback scheduling (Kick/Snare/Hi-Hat synthesis) driven by the current pattern and BPM, with stable timing and clean stop behavior."
+          "description": "Create a minimal project workspace screen routed by project id that can serve as the post-create landing page (closest existing workspace). It should fetch the current project list (via the new useProjects hook) to resolve and display the created project name and provide an obvious way back to /projects. Keep it guarded by the existing authorization/UnlockGate flow. (Verify the component's usage instructions before implementing)."
         },
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Register a new protected route at /beat-maker wrapped in the existing UnlockGate to enforce authentication + unlock gating (redirect locked users to /unlock). This leverages the existing authorization/authentication setup in the app. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/layout/AppNav.tsx",
-          "operation": "modify",
-          "description": "Add a Beat Maker navigation entry visible only when authenticated (consistent with current nav behavior). Use existing shadcn-ui Button styling and lucide icon set where appropriate. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-27",
-      "summary": "Add an export action in Beat Maker that renders the current pattern to a downloadable audio file (WAV) with a clear filename and English UI copy.",
-      "acceptanceCriteria": [
-        "User can click an Export/Download button and receive a downloaded audio file that matches the current pattern and BPM.",
-        "Exported audio is at least several bars long (enough to loop) and is not silent when steps are enabled.",
-        "User-facing export UI text is in English and clearly indicates what will be downloaded."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/features/beat-maker/renderToWav.ts",
-          "operation": "create",
-          "description": "Implement offline rendering using OfflineAudioContext to generate several bars of audio from the current pattern/BPM, then encode to WAV (or similar browser-supported downloadable format) returning a Blob plus a suggested filename."
-        },
-        {
-          "path": "frontend/src/features/beat-maker/wavEncoder.ts",
-          "operation": "create",
-          "description": "Add a small utility to encode PCM buffers to a WAV Blob with correct headers, sample rate, and channel count."
-        },
-        {
-          "path": "frontend/src/pages/BeatMakerPage.tsx",
-          "operation": "modify",
-          "description": "Add Export/Download UI in English (e.g., \"Export WAV\" / \"Download\"), wire it to offline rendering, and trigger a browser download with a clear filename (including BPM and a timestamp). Use shadcn-ui Button and toast feedback via existing Toaster setup. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-28",
-      "summary": "Allow users to add the generated beat audio into a project as an audio track by reusing the same import-audio code path; provide clear guidance when no project context is available and ensure mobile usability.",
-      "acceptanceCriteria": [
-        "From Beat Maker, the user can initiate an \"Add to project\" action that results in the generated beat being treated equivalently to an imported audio file for project usage (same track type/handling as imported beats).",
-        "If the user is not currently in a project context, the UI provides a clear next step in English (e.g., navigate to Projects to pick/create a project) without crashing.",
-        "The app remains usable on mobile screens (touch-friendly step toggles and controls)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/lib/projectAudioImport.ts",
-          "operation": "create",
-          "description": "Create a shared helper that takes a File/Blob (plus metadata like suggested name) and routes it through the app’s audio-import handling in one place (the same function will be used by both file-based imports and Beat Maker). If the repository already has an import workflow elsewhere, refactor this helper to delegate to it to ensure truly shared behavior."
-        },
-        {
-          "path": "frontend/src/pages/BeatMakerPage.tsx",
-          "operation": "modify",
-          "description": "Add an \"Add to project\" action that uses the shared import helper with the rendered audio Blob. If no active project context is available, show clear English guidance and a safe navigation action to /projects (no crash). Ensure controls/grid remain touch-friendly (adequate hit targets) for mobile. Use shadcn-ui buttons/dialog primitives as needed. Verify the component's usage instructions before implementing."
+          "description": "Register and wire a protected route for the new project workspace page (e.g., under /projects/$projectId) wrapped with UnlockGate, ensuring navigation after create is possible and remains consistent with the authorization component’s auth/unlock model. (Verify the component's usage instructions before implementing)."
         },
         {
           "path": "frontend/src/pages/ProjectsPage.tsx",
           "operation": "modify",
-          "description": "Introduce (or stub, if project selection is not yet implemented) a minimal, English \"Import Audio\" action that uses the same shared projectAudioImport helper so Beat Maker and file import share the same code path. Keep changes read-oriented and avoid adding admin/CRUD behaviors not requested. Verify the component's usage instructions before implementing."
+          "description": "Implement the create modal flow: collect a project name (default to \"Untitled Project\" if empty), show loading/disabled state during creation, and on success navigate to the created project workspace route. Also render the projects list from backend (via useProjects) so the newly created project is visible when returning to /projects. Use Sonner toast for success/error with a retry action where appropriate. (Verify the component's usage instructions before implementing)."
         }
       ]
     }

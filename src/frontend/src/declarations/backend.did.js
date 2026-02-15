@@ -13,12 +13,18 @@ export const UserRole = IDL.Variant({
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
+export const Project = IDL.Record({
+  'id' : IDL.Nat,
+  'owner' : IDL.Principal,
+  'name' : IDL.Text,
+});
 export const UserProfile = IDL.Record({ 'name' : IDL.Text });
 export const PasswordHash = IDL.Text;
 
 export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'createProject' : IDL.Func([IDL.Text], [Project], []),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getIsUnlocked' : IDL.Func([], [IDL.Bool], ['query']),
@@ -28,6 +34,7 @@ export const idlService = IDL.Service({
       ['query'],
     ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'listProjects' : IDL.Func([], [IDL.Vec(Project)], ['query']),
   'logout' : IDL.Func([], [], []),
   'saveAppPassword' : IDL.Func([PasswordHash], [], []),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
@@ -42,12 +49,18 @@ export const idlFactory = ({ IDL }) => {
     'user' : IDL.Null,
     'guest' : IDL.Null,
   });
+  const Project = IDL.Record({
+    'id' : IDL.Nat,
+    'owner' : IDL.Principal,
+    'name' : IDL.Text,
+  });
   const UserProfile = IDL.Record({ 'name' : IDL.Text });
   const PasswordHash = IDL.Text;
   
   return IDL.Service({
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'createProject' : IDL.Func([IDL.Text], [Project], []),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getIsUnlocked' : IDL.Func([], [IDL.Bool], ['query']),
@@ -57,6 +70,7 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'listProjects' : IDL.Func([], [IDL.Vec(Project)], ['query']),
     'logout' : IDL.Func([], [], []),
     'saveAppPassword' : IDL.Func([PasswordHash], [], []),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),

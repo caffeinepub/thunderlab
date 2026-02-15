@@ -1,8 +1,8 @@
 {
-  "frontend/src/App.tsx": "Main application component with TanStack Router setup defining public routes (login, unlock) and protected routes (projects, beat-maker, settings) wrapped in UnlockGate, with ThemeProvider and Toaster for notifications.",
-  "frontend/src/pages/LoginPage.tsx": "Landing page with Thunderlab branding and Internet Identity sign-in; redirects authenticated admins directly to projects and non-admins to unlock page after role fetch completes.",
+  "frontend/src/App.tsx": "Main application component with TanStack Router setup including new project workspace route (/projects/$projectId) wrapped in UnlockGate, plus all existing public and protected routes with ThemeProvider and Toaster.",
+  "frontend/src/pages/LoginPage.tsx": "Landing page with Thunderlab branding and Internet Identity sign-in featuring error display, popup-blocked detection with 3-second timeout, immediate loading feedback, and sanitized error messages with retry capability.",
   "frontend/src/pages/UnlockPage.tsx": "Handles app password creation or unlock flow for non-admin users; immediately redirects admin users away from unlock page to their intended destination.",
-  "frontend/src/pages/ProjectsPage.tsx": "Protected projects workspace page showing empty state with call-to-action for creating first project and getting-started cards.",
+  "frontend/src/pages/ProjectsPage.tsx": "Protected projects page with create project dialog, projects grid display, empty state with CTAs, loading states, error handling with toast notifications and retry actions.",
   "frontend/src/pages/SettingsPage.tsx": "Settings page displaying user profile information and AppPasswordPanel for password management, plus About section with founder credit.",
   "frontend/src/components/layout/AppLayout.tsx": "Root layout component that accepts optional children prop, wrapping all pages with AppNav header, main content area (using children or Outlet), and AppFooter.",
   "frontend/src/components/layout/AppNav.tsx": "Top navigation bar showing Thunderlab logo and navigation links to Projects, Beat Maker, and Settings when authenticated.",
@@ -21,7 +21,7 @@
   "frontend/src/index.css": "Global styles with OKLCH color system customized for Thunderlab with purple/blue accent theme (hue 264) in both light and dark modes.",
   "frontend/tailwind.config.js": "Tailwind configuration with custom color tokens, Inter font family, increased border radius (0.75rem), and custom shadow utilities.",
   "frontend/src/hooks/useCallerRole.ts": "React Query hooks that fetch the caller's role from the backend (useCallerRole returns full role data, useIsCallerAdmin returns boolean) with conservative error handling treating failures as non-admin.",
-  "frontend/index.html": "HTML entry point with PWA metadata including manifest link, theme colors, iOS-specific meta tags, and icon references for app installation.",
+  "frontend/index.html": "HTML entry point with PWA metadata and runtime script injection that ensures process.env.II_URL is defined before React loads, defaulting to the official Internet Identity provider URL for production/PWA/Capacitor builds.",
   "frontend/public/manifest.webmanifest": "Web app manifest defining Thunderlab's PWA configuration with app name, theme colors, display mode, and icon references for installability.",
   "frontend/capacitor.config.ts": "Capacitor configuration file specifying app ID, name, web directory, and native plugin settings for iOS and Android builds.",
   "frontend/src/hooks/useCapacitorDeepLinks.ts": "React hook that dynamically imports and sets up Capacitor deep link handling when available, gracefully handling missing dependencies during web development while enabling native deep links when built with Capacitor.",
@@ -34,5 +34,7 @@
   "frontend/src/features/beat-maker/audioEngine.ts": "Web Audio API engine for real-time drum synthesis (kick/snare/hi-hat) using oscillators and noise generators with envelope shaping for authentic drum sounds.",
   "frontend/src/features/beat-maker/renderToWav.ts": "Offline audio rendering utility that generates 4 bars of audio from the current pattern and BPM using OfflineAudioContext, then encodes to WAV format with timestamped filename.",
   "frontend/src/features/beat-maker/wavEncoder.ts": "WAV file encoder that converts AudioBuffer to WAV Blob with proper RIFF headers, interleaved stereo channels, and 16-bit PCM encoding.",
-  "frontend/src/lib/projectAudioImport.ts": "Shared helper stub for importing audio files (from file uploads or Beat Maker) into projects; placeholder for future project management implementation."
+  "frontend/src/lib/projectAudioImport.ts": "Shared helper stub for importing audio files (from file uploads or Beat Maker) into projects; placeholder for future project management implementation.",
+  "frontend/src/hooks/useProjects.ts": "React Query hooks for listing projects and creating projects with backend integration, locked error handling via backendCallWithUnlock, and automatic navigation to created project workspace.",
+  "frontend/src/pages/ProjectWorkspacePage.tsx": "Individual project workspace page that displays project details by ID, shows coming-soon placeholder for full workspace features with valid lucide-react icons (AudioWaveform instead of Waveform), and provides navigation back to projects list."
 }

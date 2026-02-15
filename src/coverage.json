@@ -1,78 +1,67 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-15T00:16:41.199Z",
+  "generatedAt": "2026-02-15T00:50:43.474Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
     "total": 3,
-    "implemented": 3,
+    "implemented": 2,
     "items": [
       {
-        "id": "REQ-26",
-        "summary": "Add a protected \"Beat Maker\" experience inside Thunderlab that lets an authenticated + unlocked user create a simple drum beat using a step sequencer UI (e.g., Kick/Snare/Hi-Hat rows on a 16-step grid) with transport controls (Play/Stop) and a tempo (BPM) control.",
+        "id": "REQ-32",
+        "summary": "Make project creation actionable from the Projects page by wiring the \"New Project\" and \"Create Your First Project\" buttons to a real create-project flow instead of doing nothing.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/BeatMakerPage.tsx",
-          "frontend/src/features/beat-maker/useStepSequencer.ts",
-          "frontend/src/features/beat-maker/audioEngine.ts",
-          "frontend/src/App.tsx",
-          "frontend/src/components/layout/AppNav.tsx"
+          "frontend/src/pages/ProjectsPage.tsx",
+          "frontend/src/hooks/useProjects.ts"
         ],
         "matchedFiles": [
-          "frontend/src/pages/BeatMakerPage.tsx",
-          "frontend/src/features/beat-maker/useStepSequencer.ts",
-          "frontend/src/features/beat-maker/audioEngine.ts",
-          "frontend/src/App.tsx",
-          "frontend/src/components/layout/AppNav.tsx"
+          "frontend/src/pages/ProjectsPage.tsx",
+          "frontend/src/hooks/useProjects.ts"
         ]
       },
       {
-        "id": "REQ-27",
-        "summary": "Provide an in-app audio rendering/export action in Beat Maker that generates an audio file from the current pattern (WAV or similar browser-supported downloadable format) with a clear filename and download button.",
+        "id": "REQ-33",
+        "summary": "Implement a minimal, user-visible create-project UX that lets the user create a new project and then lands them in the project workspace (or the closest existing project screen), with clear loading feedback during creation.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/features/beat-maker/renderToWav.ts",
-          "frontend/src/features/beat-maker/wavEncoder.ts",
-          "frontend/src/pages/BeatMakerPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/features/beat-maker/renderToWav.ts",
-          "frontend/src/features/beat-maker/wavEncoder.ts",
-          "frontend/src/pages/BeatMakerPage.tsx"
-        ]
-      },
-      {
-        "id": "REQ-28",
-        "summary": "Integrate Beat Maker output with the existing \"import beats/audio\" workflow by allowing the user to take the generated beat audio and add it into a project as an audio track without requiring external tools (e.g., offer an \"Add to project\" action that reuses the same code path as importing an audio file).",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/lib/projectAudioImport.ts",
-          "frontend/src/pages/BeatMakerPage.tsx",
+          "frontend/src/pages/ProjectWorkspacePage.tsx",
+          "frontend/src/App.tsx",
           "frontend/src/pages/ProjectsPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/lib/projectAudioImport.ts",
-          "frontend/src/pages/BeatMakerPage.tsx"
+          "frontend/src/pages/ProjectWorkspacePage.tsx",
+          "frontend/src/App.tsx",
+          "frontend/src/pages/ProjectsPage.tsx"
         ]
+      },
+      {
+        "id": "REQ-34",
+        "summary": "Ensure the backend exposes and/or correctly handles the project creation operation used by the Projects page (create + list at minimum) so that project creation actually persists to the user account and survives refresh.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
     "frontend/src/App.tsx",
-    "frontend/src/components/layout/AppNav.tsx",
-    "frontend/src/features/beat-maker/audioEngine.ts",
-    "frontend/src/features/beat-maker/renderToWav.ts",
-    "frontend/src/features/beat-maker/useStepSequencer.ts",
-    "frontend/src/features/beat-maker/wavEncoder.ts",
-    "frontend/src/lib/projectAudioImport.ts",
-    "frontend/src/pages/BeatMakerPage.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useProjects.ts",
+    "frontend/src/pages/ProjectWorkspacePage.tsx",
+    "frontend/src/pages/ProjectsPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

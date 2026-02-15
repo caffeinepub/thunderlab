@@ -1,13 +1,13 @@
 # Specification
 
 ## Summary
-**Goal:** Add a protected in-app Beat Maker so signed-in, unlocked users can create simple drum beats, export them as audio, and use them in projects.
+**Goal:** Fix the Projects page so users can actually create a project after login, with clear feedback and proper persistence.
 
 **Planned changes:**
-- Add a new authenticated-only “Beat Maker” entry point and route/page guarded by the existing UnlockGate (redirect locked users to `/unlock`).
-- Build a step sequencer UI with at least 3 drum rows (kick, snare, hi-hat) on a 16-step grid, including Play/Stop transport and a BPM (tempo) control that affects playback timing.
-- Add an Export/Download action that renders the current pattern + BPM to a downloadable audio file (WAV or similar), with clear English UI text and a clear filename.
-- Add an “Add to project” action that takes the generated beat audio and inserts it into a project as an audio track via the same handling/path as importing an audio file, with a clear next step if no project is currently selected.
-- Ensure the Beat Maker UI remains usable on mobile (touch-friendly step toggles and controls) and all new user-facing text is in English.
+- Wire the /projects page “New Project” and “Create Your First Project” buttons to a real create-project flow (dialog or dedicated screen) with immediate visible UI response.
+- Add a minimal create-project UX that collects a project name (or uses a sensible default), supports Create/Cancel, and shows loading/disabled state during creation.
+- On successful creation, navigate to the new project’s workspace (or closest existing project screen) and ensure it appears in the projects list.
+- Implement/verify backend project create + list operations so projects persist to the authenticated user across refresh, enforcing existing auth/unlock guards.
+- Add clear English error messaging and a retry path when project creation fails, while preserving existing redirect behavior for unauthenticated/locked users.
 
-**User-visible outcome:** Signed-in users can open Beat Maker, program a simple drum pattern, play it at a chosen BPM, export it as an audio download, and add it into a project as an audio track (or be guided to select/create a project).
+**User-visible outcome:** From /projects, users can click either create call-to-action to start creating a project, see progress while it’s created, and end up in the new project with the project saved and visible in their projects list (or see a clear error with a way to retry).

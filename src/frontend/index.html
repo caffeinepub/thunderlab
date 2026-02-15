@@ -20,6 +20,22 @@
         <link rel='icon' type='image/png' sizes='512x512' href='/assets/generated/thunderlab-app-icon.dim_512x512.png' />
         
         <title>Thunderlab</title>
+        
+        <!-- Runtime environment injection - must run before module scripts -->
+        <script>
+            // Ensure process.env is available at runtime for production/PWA/Capacitor builds
+            if (typeof process === 'undefined') {
+                window.process = { env: {} };
+            } else if (typeof process.env === 'undefined') {
+                window.process.env = {};
+            }
+            
+            // Set II_URL if not already defined
+            if (!window.process.env.II_URL) {
+                // Default to the official Internet Identity provider
+                window.process.env.II_URL = 'https://identity.ic0.app';
+            }
+        </script>
     </head>
     <body>
         <div id='root'></div>

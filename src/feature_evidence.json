@@ -2,14 +2,32 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-protected-beat-maker-experience-inside-thunderlab-that-lets-an-authenticated-unlocked-user-create-a-simple-drum-beat-using-a-step-sequencer-ui-e-g-kick-snare-hi-hat-rows-on-a-16-step-grid-with-transport-controls-play-stop-and-a-tempo-bpm-control",
-      "featureTitle": "Add a protected \"Beat Maker\" experience inside Thunderlab that lets an authenticated + unlocked user create a simple drum beat using a step sequencer UI (e.g., Kick/Snare/Hi-Hat rows on a 16-step grid) with transport controls (Play/Stop) and a tempo (BPM) control.",
+      "featureId": "feature-make-project-creation-actionable-from-the-projects-page-by-wiring-the-new-project-and-create-your-first-project-buttons-to-a-real-create-project-flow-instead-of-doing-nothing",
+      "featureTitle": "Make project creation actionable from the Projects page by wiring the \"New Project\" and \"Create Your First Project\" buttons to a real create-project flow instead of doing nothing.",
+      "files": [
+        "frontend/src/hooks/useProjects.ts",
+        "frontend/src/pages/ProjectsPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-32"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-a-minimal-user-visible-create-project-ux-that-lets-the-user-create-a-new-project-and-then-lands-them-in-the-project-workspace-or-the-closest-existing-project-screen-with-clear-loading-feedback-during-creation",
+      "featureTitle": "Implement a minimal, user-visible create-project UX that lets the user create a new project and then lands them in the project workspace (or the closest existing project screen), with clear loading feedback during creation.",
       "files": [
         "frontend/src/App.tsx",
-        "frontend/src/components/layout/AppNav.tsx",
-        "frontend/src/features/beat-maker/audioEngine.ts",
-        "frontend/src/features/beat-maker/useStepSequencer.ts",
-        "frontend/src/pages/BeatMakerPage.tsx"
+        "frontend/src/pages/ProjectWorkspacePage.tsx",
+        "frontend/src/pages/ProjectsPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -20,48 +38,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-26"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-provide-an-in-app-audio-rendering-export-action-in-beat-maker-that-generates-an-audio-file-from-the-current-pattern-wav-or-similar-browser-supported-downloadable-format-with-a-clear-filename-and-download-button",
-      "featureTitle": "Provide an in-app audio rendering/export action in Beat Maker that generates an audio file from the current pattern (WAV or similar browser-supported downloadable format) with a clear filename and download button.",
-      "files": [
-        "frontend/src/features/beat-maker/renderToWav.ts",
-        "frontend/src/features/beat-maker/wavEncoder.ts",
-        "frontend/src/pages/BeatMakerPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-27"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-integrate-beat-maker-output-with-the-existing-import-beats-audio-workflow-by-allowing-the-user-to-take-the-generated-beat-audio-and-add-it-into-a-project-as-an-audio-track-without-requiring-external-tools-e-g-offer-an-add-to-project-action-that-reuses-the-same-code-path-as-importing-an-audio-file",
-      "featureTitle": "Integrate Beat Maker output with the existing \"import beats/audio\" workflow by allowing the user to take the generated beat audio and add it into a project as an audio track without requiring external tools (e.g., offer an \"Add to project\" action that reuses the same code path as importing an audio file).",
-      "files": [
-        "frontend/src/lib/projectAudioImport.ts",
-        "frontend/src/pages/BeatMakerPage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-28"
+        "REQ-33"
       ],
       "confidence": "high"
     }

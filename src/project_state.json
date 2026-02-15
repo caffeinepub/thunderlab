@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 13,
+  "projectStateVersion": 17,
   "summary": "Thunderlab is a mobile-first music production platform for emerging/independent artists, enabling multi-track vocal recording, beat import, essential audio effects (autotune, EQ, compression, reverb), cloud project saving, export of finished tracks, and sharing—designed to be simple, accessible, and smartphone-first. Future plans include collaboration tools, AI mastering, and creator community features while keeping core tools free.",
   "architectural_notes": [
     "Mobile-first UX and performance as primary constraint (smartphone-first design).",
@@ -11,9 +11,11 @@
   ],
   "known_issues": [
     "Auth requirements changed: project state currently specifies Internet Identity, but user now requests password-based login.",
-    "Deployment error encountered during network deployment; app remains in previous deployed state until redeploy succeeds."
+    "Deployment error encountered during network deployment; app remains in previous deployed state until redeploy succeeds.",
+    "Sign-in flow regression: pressing “Sign In” does not open the Internet Identity popup at all (no window opens).",
+    "Post-login regression: after successfully signing in, tapping “Create Project” does nothing / no UI appears (project creation flow not opening)."
   ],
-  "isFixRequest": false,
+  "isFixRequest": true,
   "existing_features": [
     {
       "id": "feature-create-a-mobile-first-thunderlab-web-app-shell-with-a-coherent-distinct-visual-theme-colors-typography-spacing-component-style-applied-consistently-across-all-screens",
@@ -214,6 +216,46 @@
         "REQ-28"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-fix-the-internet-identity-sign-in-regression-where-clicking-the-sign-in-button-does-not-open-any-internet-identity-window-popup-by-ensuring-the-internet-identity-provider-url-is-correctly-available-at-runtime-the-app-currently-reads-it-from-process-env-ii-url-implement-a-runtime-safe-injection-so-process-env-ii-url-is-defined-in-production-pwa-capacitor-builds-even-when-process-is-not-provided-by-the-bundler",
+      "title": "Fix the Internet Identity sign-in regression where clicking the \"Sign In\" button does not open any Internet Identity window/popup by ensuring the Internet Identity provider URL is correctly available at runtime (the app currently reads it from `process.env.II_URL`). Implement a runtime-safe injection so `process.env.II_URL` is defined in production/PWA/Capacitor builds even when `process` is not provided by the bundler.",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-user-visible-login-error-handling-on-the-login-page-so-that-when-internet-identity-login-cannot-be-started-e-g-popup-blocked-provider-url-missing-misconfigured-authclient-not-initialized-the-user-sees-a-clear-english-error-message-and-an-actionable-hint-e-g-please-allow-popups-for-this-site-and-try-again",
+      "title": "Add user-visible login error handling on the Login page so that when Internet Identity login cannot be started (e.g., popup blocked, provider URL missing/misconfigured, AuthClient not initialized), the user sees a clear English error message and an actionable hint (e.g., “Please allow popups for this site and try again.”).",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-minimal-login-flow-smoke-check-in-the-ui-layer-when-the-user-clicks-sign-in-the-app-should-transition-into-a-visible-connecting-loading-state-immediately-and-remain-in-that-state-until-either-login-succeeds-or-a-login-error-is-surfaced-to-the-user",
+      "title": "Add a minimal login-flow smoke check in the UI layer: when the user clicks \"Sign In\", the app should transition into a visible “Connecting…”/loading state immediately and remain in that state until either login succeeds or a login error is surfaced to the user.",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-make-project-creation-actionable-from-the-projects-page-by-wiring-the-new-project-and-create-your-first-project-buttons-to-a-real-create-project-flow-instead-of-doing-nothing",
+      "title": "Make project creation actionable from the Projects page by wiring the \"New Project\" and \"Create Your First Project\" buttons to a real create-project flow instead of doing nothing.",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-minimal-user-visible-create-project-ux-that-lets-the-user-create-a-new-project-and-then-lands-them-in-the-project-workspace-or-the-closest-existing-project-screen-with-clear-loading-feedback-during-creation",
+      "title": "Implement a minimal, user-visible create-project UX that lets the user create a new project and then lands them in the project workspace (or the closest existing project screen), with clear loading feedback during creation.",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -323,6 +365,14 @@
       "id": "AR-29",
       "summary": "Add in-app beat creation tools (built-in beat maker/sequencer so users can create beats inside Thunderlab)",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-32",
+      "summary": "Ensure the backend exposes and/or correctly handles the project creation operation used by the Projects page (create + list at minimum) so that project creation actually persists to the user account and survives refresh.",
+      "reqIds": [
+        "REQ-34"
+      ],
       "status": "pending"
     }
   ],

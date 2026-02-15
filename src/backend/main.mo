@@ -4,7 +4,9 @@ import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
+import Migration "migration";
 
+(with migration = Migration.run)
 actor {
   // App Password Types
   type PasswordHash = Text;
@@ -15,9 +17,75 @@ actor {
   let appPasswords = Map.empty<Principal, PasswordHash>();
   let unlockedSessions = Map.empty<Principal, Timestamp>();
 
+  // Task System
+  public type Project = {
+    id : Nat;
+    name : Text;
+    owner : Principal;
+  };
+
+  var projectCounter = 0;
+  let projects = Map.empty<Nat, Project>();
+  let userProjects = Map.empty<Principal, [Nat]>();
+
   // Initialize the user system state
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
+
+  // Project Management
+  public shared ({ caller }) func createProject(name : Text) : async Project {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can create projects");
+    };
+    let id = projectCounter;
+    let project : Project = {
+      id;
+      name;
+      owner = caller;
+    };
+    projects.add(id, project);
+
+    // Add project to user's project list
+    let currentProjects = switch (userProjects.get(caller)) {
+      case (null) { [] };
+      case (?existing) { existing };
+    };
+    let updatedProjects = currentProjects.concat([id]);
+    userProjects.add(caller, updatedProjects);
+
+    projectCounter += 1;
+    project;
+  };
+
+  public query ({ caller }) func listProjects() : async [Project] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can list projects");
+    };
+
+    // Admins can see all projects
+    if (AccessControl.isAdmin(accessControlState, caller)) {
+      return projects.toArray().map(
+        func((_, project)) { project }
+      );
+    };
+
+    // Regular users can only see their own projects
+    switch (userProjects.get(caller)) {
+      case (null) { [] };
+      case (?projectIds) {
+        projectIds.map<Nat, Project>(
+          func(id : Nat) {
+            switch (projects.get(id)) {
+              case (?project) { project };
+              case (null) {
+                Runtime.trap("Project not found");
+              };
+            };
+          }
+        );
+      };
+    };
+  };
 
   // User Profile Type
   public type UserProfile = {

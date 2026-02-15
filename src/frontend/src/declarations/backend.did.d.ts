@@ -11,6 +11,7 @@ import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
 export type PasswordHash = string;
+export interface Project { 'id' : bigint, 'owner' : Principal, 'name' : string }
 export interface UserProfile { 'name' : string }
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
@@ -18,11 +19,13 @@ export type UserRole = { 'admin' : null } |
 export interface _SERVICE {
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'createProject' : ActorMethod<[string], Project>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getIsUnlocked' : ActorMethod<[], boolean>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
+  'listProjects' : ActorMethod<[], Array<Project>>,
   'logout' : ActorMethod<[], undefined>,
   'saveAppPassword' : ActorMethod<[PasswordHash], undefined>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,

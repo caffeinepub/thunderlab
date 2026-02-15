@@ -8,6 +8,11 @@ export interface None {
 }
 export type Option<T> = Some<T> | None;
 export type PasswordHash = string;
+export interface Project {
+    id: bigint;
+    owner: Principal;
+    name: string;
+}
 export interface UserProfile {
     name: string;
 }
@@ -18,11 +23,13 @@ export enum UserRole {
 }
 export interface backendInterface {
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    createProject(name: string): Promise<Project>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getIsUnlocked(): Promise<boolean>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
+    listProjects(): Promise<Array<Project>>;
     logout(): Promise<void>;
     saveAppPassword(passwordHash: PasswordHash): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;

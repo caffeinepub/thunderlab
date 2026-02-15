@@ -1,74 +1,73 @@
 {
   "kind": "build_request",
-  "title": "Add an in-app beat maker so users can create beats inside Thunderlab",
-  "priority": "normal",
+  "title": "Fix Create Project button doing nothing after login",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-26",
-      "text": "Add a protected \"Beat Maker\" experience inside Thunderlab that lets an authenticated + unlocked user create a simple drum beat using a step sequencer UI (e.g., Kick/Snare/Hi-Hat rows on a 16-step grid) with transport controls (Play/Stop) and a tempo (BPM) control.",
+      "id": "REQ-32",
+      "text": "Make project creation actionable from the Projects page by wiring the \"New Project\" and \"Create Your First Project\" buttons to a real create-project flow instead of doing nothing.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4",
+          "msg-6"
         ],
         "quotes": [
-          "Can you make it so they can create beats through the app"
+          "But I can’t create project",
+          "Got in pressed create project nothing can up"
         ]
       },
       "acceptanceCriteria": [
-        "A new Beat Maker entry point is available to signed-in users (and is not shown on the unauthenticated login screen).",
-        "Beat Maker includes a step grid where users can toggle steps on/off for at least 3 drum sounds (kick, snare, hi-hat).",
-        "Beat Maker includes Play and Stop controls and a BPM control; playback timing changes with BPM.",
-        "Beat Maker route/page is guarded by the existing UnlockGate behavior (locked users are redirected to /unlock)."
+        "On /projects, clicking either call-to-action (\"New Project\" or \"Create Your First Project\") triggers an immediate visible UI response (e.g., opens a create dialog or navigates to a create-project screen) rather than doing nothing.",
+        "If the user is not authenticated or becomes locked, the existing guard behavior applies (redirect to / or /unlock as appropriate) and the user is not left on an unresponsive screen.",
+        "If project creation fails for any reason, the UI shows a clear English error message and provides a retry path."
       ]
     },
     {
-      "id": "REQ-27",
-      "text": "Provide an in-app audio rendering/export action in Beat Maker that generates an audio file from the current pattern (WAV or similar browser-supported downloadable format) with a clear filename and download button.",
+      "id": "REQ-33",
+      "text": "Implement a minimal, user-visible create-project UX that lets the user create a new project and then lands them in the project workspace (or the closest existing project screen), with clear loading feedback during creation.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-6"
         ],
         "quotes": [
-          "Can you make it so they can create beats through the app"
+          "Got in pressed create project nothing can up"
         ]
       },
       "acceptanceCriteria": [
-        "User can click an Export/Download button and receive a downloaded audio file that matches the current pattern and BPM.",
-        "Exported audio is at least several bars long (enough to loop) and is not silent when steps are enabled.",
-        "User-facing export UI text is in English and clearly indicates what will be downloaded."
+        "The create-project UX collects at least a project name (or uses a sensible default like \"Untitled Project\" if name entry is optional) and provides a Create/Cancel path.",
+        "While the project is being created, the UI shows a loading/disabled state so the user cannot repeatedly click and think nothing is happening.",
+        "After success, the app navigates the user to the created project's screen/workspace and the new project is visible in the projects list when returning to /projects."
       ]
     },
     {
-      "id": "REQ-28",
-      "text": "Integrate Beat Maker output with the existing \"import beats/audio\" workflow by allowing the user to take the generated beat audio and add it into a project as an audio track without requiring external tools (e.g., offer an \"Add to project\" action that reuses the same code path as importing an audio file).",
-      "target": "frontend",
+      "id": "REQ-34",
+      "text": "Ensure the backend exposes and/or correctly handles the project creation operation used by the Projects page (create + list at minimum) so that project creation actually persists to the user account and survives refresh.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-6"
         ],
         "quotes": [
-          "Can you make it so they can create beats through the app"
+          "Got in pressed create project nothing can up"
         ]
       },
       "acceptanceCriteria": [
-        "From Beat Maker, the user can initiate an \"Add to project\" action that results in the generated beat being treated equivalently to an imported audio file for project usage (same track type/handling as imported beats).",
-        "If the user is not currently in a project context, the UI provides a clear next step in English (e.g., navigate to Projects to pick/create a project) without crashing.",
-        "The app remains usable on mobile screens (touch-friendly step toggles and controls)."
+        "There is a backend method to create a project for the authenticated caller and return the created project's identifier.",
+        "There is a backend method to list the caller's projects so the Projects page can render them after creation.",
+        "Authorization is enforced: only authenticated users can create/list projects; for sensitive operations, preserve the existing unlock-gated security model (non-admin users must be unlocked)."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor (all logic in backend/main.mo); add backend changes only if strictly required.",
-    "Do not edit files under frontend/src/components/ui or any frontend immutablePaths listed in SYSTEM_CONTEXT; compose existing UI components instead.",
-    "All user-facing text introduced for Beat Maker must be in English.",
-    "Beat Maker must respect existing authentication + unlock gating (use the current UnlockGate pattern for protected routes/pages)."
+    "Do not edit files under frontend/src/components/ui (read-only UI components).",
+    "Do not edit frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, or frontend/src/main.tsx (immutable paths).",
+    "Backend must remain a single Motoko actor in backend/main.mo; only add backend/migration.mo if an actual state upgrade/migration is required."
   ],
   "nonGoals": [
-    "Full DAW-grade MIDI editor, piano roll, or melody/harmony composition tools.",
-    "AI-assisted beat generation or third-party sample pack integrations.",
-    "Real-time collaboration or shared beat sessions."
+    "Do not add new audio features (recording/effects/export/sharing) beyond what is required to make Create Project functional.",
+    "Do not add third-party authentication providers or external databases/services."
   ],
   "imageRequirements": {
     "required": [],

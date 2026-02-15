@@ -6,6 +6,7 @@ import { useInternetIdentity } from './hooks/useInternetIdentity';
 import LoginPage from './pages/LoginPage';
 import UnlockPage from './pages/UnlockPage';
 import ProjectsPage from './pages/ProjectsPage';
+import ProjectWorkspacePage from './pages/ProjectWorkspacePage';
 import SettingsPage from './pages/SettingsPage';
 import BeatMakerPage from './pages/BeatMakerPage';
 import AppLayout from './components/layout/AppLayout';
@@ -44,6 +45,16 @@ const projectsRoute = createRoute({
   ),
 });
 
+const projectWorkspaceRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/projects/$projectId',
+  component: () => (
+    <UnlockGate>
+      <ProjectWorkspacePage />
+    </UnlockGate>
+  ),
+});
+
 const beatMakerRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/beat-maker',
@@ -64,7 +75,14 @@ const settingsRoute = createRoute({
   ),
 });
 
-const routeTree = rootRoute.addChildren([loginRoute, unlockRoute, projectsRoute, beatMakerRoute, settingsRoute]);
+const routeTree = rootRoute.addChildren([
+  loginRoute,
+  unlockRoute,
+  projectsRoute,
+  projectWorkspaceRoute,
+  beatMakerRoute,
+  settingsRoute,
+]);
 
 const router = createRouter({ routeTree });
 
